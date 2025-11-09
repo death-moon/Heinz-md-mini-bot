@@ -37,10 +37,10 @@ async function createPairingSession(number, settings = {}) {
   await cleanupSession(sanitizedNumber);
 
   try {
-    console.log(`*🔄 ᴄʀᴇ́ᴀᴛɪᴏɴ sᴇssɪᴏɴ ᴘᴏᴜʀ ${sanitizedNumber}*`);
+    console.log(`🔄 Création session pour ${sanitizedNumber}`);
     
     // Créer le dossier de session
-    const sessionPath = path.join(__dirname, "sessions", `"sᴇssɪᴏɴ_${sanitizedNumber}*`);
+    const sessionPath = path.join(__dirname, "sessions", `session_${sanitizedNumber}`);
     await fs.ensureDir(sessionPath);
 
     // Charger ou créer l'état d'authentification
@@ -91,7 +91,7 @@ async function createPairingSession(number, settings = {}) {
     return result;
 
   } catch (error) {
-    console.error(`*❌ ᴇʀʀᴇᴜʀ sᴇssɪᴏɴ ${sanitizedNumber}:*`, error);
+    console.error(`❌ Erreur session ${sanitizedNumber}:`, error);
     await cleanupSession(sanitizedNumber);
     throw error;
   }
@@ -103,7 +103,7 @@ async function createPairingSession(number, settings = {}) {
 async function generatePairingCode(number) {
   const sessionData = activeSessions.get(number);
   if (!sessionData) {
-    throw new Error("*sᴇssɪᴏɴ ɴᴏɴ ᴛʀᴏᴜᴠᴇ́ᴇ*");
+    throw new Error("Session non trouvée");
   }
 
   const { socket } = sessionData;
@@ -113,7 +113,7 @@ async function generatePairingCode(number) {
     return {
       success: true,
       connected: true,
-      message: "*ᴀᴘᴘᴀʀᴇɪʟ ᴅᴇ́ᴊᴀ̀ ᴄᴏɴɴᴇᴄᴛᴇ́*"
+      message: "Appareil déjà connecté"
     };
   }
 
@@ -122,36 +122,36 @@ async function generatePairingCode(number) {
 
   while (retries > 0 && !code) {
     try {
-      console.log(`*🔑 ɢᴇ́ɴᴇ́ʀᴀᴛɪᴏɴ ᴄᴏᴅᴇ ᴘᴏᴜʀ ${number} (${6-retries}/5)*`);
+      console.log(`🔑 Génération code pour ${number} (${6-retries}/5)`);
       
       if (retries < 5) await delay(2000);
       
       code = await socket.requestPairingCode(number);
       
       if (code) {
-        console.log(`*✅ ᴄᴏᴅᴇ ɢᴇ́ɴᴇ́ʀᴇ́: ${code}*`);
+        console.log(`✅ Code généré: ${code}`);
         
-        sessionData.status = "*ᴡᴀɪᴛɪɴɢ_ғᴏʀ_ᴘᴀɪʀɪɴɢ*";
+        sessionData.status = "waiting_for_pairing";
         sessionData.pairingCode = code;
 
         return {
           success: true,
           code: code,
-          message: `*ᴄᴏᴅᴇ ɢᴇ́ɴᴇ́ʀᴇ́: ${code}*`,
+          message: `Code généré: ${code}`,
           expiresIn: PAIRING_TIMEOUT
         };
       }
     } catch (error) {
       retries--;
-      console.warn(`*⚠️ ᴇ́ᴄʜᴇᴄ ɢᴇ́ɴᴇ́ʀᴀᴛɪᴏɴ: ${error.message} (${retries} ʀᴇsᴛᴀɴᴛᴇs)*`);
+      console.warn(`⚠️ Échec génération: ${error.message} (${retries} restantes)`);
       
       if (retries === 0) {
-        throw new Error(`*ɪᴍᴘᴏssɪʙʟᴇ ᴅᴇ ɢᴇ́ɴᴇ́ʀᴇʀ ʟᴇ ᴄᴏᴅᴇ: ${error.message}*`);
+        throw new Error(`Impossible de générer le code: ${error.message}`);
       }
     }
   }
 
-  throw new Error("*ᴇ́ᴄʜᴇᴄ ɢᴇ́ɴᴇ́ʀᴀᴛɪᴏɴ ᴅᴜ ᴄᴏᴅᴇ*");
+  throw new Error("Échec génération du code");
 }
 
 /**
@@ -164,9 +164,9 @@ function setupSocketEvents(socket, number) {
     if (sessionData) {
       try {
         await sessionData.saveCreds();
-        console.log(`*💾 ᴄʀᴇᴅᴇɴᴛɪᴀʟs sᴀᴜᴠᴇɢᴀʀᴅᴇ́s ᴘᴏᴜʀ ${number}*`);
+        console.log(`💾 Credentials sauvegardés pour ${number}`);
       } catch (error) {
-        console.error(`*❌ ᴇʀʀᴇᴜʀ sᴀᴜᴠᴇɢᴀʀᴅᴇ ${number}:*`, error);
+        console.error(`❌ Erreur sauvegarde ${number}:`, error);
       }
     }
   });
@@ -186,11 +186,11 @@ async function handleConnectionUpdate(number, update) {
 
   if (!sessionData) return;
 
-  console.log(`*📡 ᴜᴘᴅᴀᴛᴇ ${number}: ${connection}*`);
-  sessionData.status = connection || "ᴜɴᴋɴᴏᴡɴ";
+  console.log(`📡 Update ${number}: ${connection}`);
+  sessionData.status = connection || "unknown";
 
   if (connection === 'open') {
-    console.log(`*🎉 ᴄᴏɴɴᴇxɪᴏɴ ʀᴇ́ᴜssɪᴇ ᴘᴏᴜʀ ${number}!*`);
+    console.log(`🎉 Connexion réussie pour ${number}!`);
     
     reconnectAttempts.delete(number);
     sessionData.status = 'connected';
@@ -202,19 +202,19 @@ async function handleConnectionUpdate(number, update) {
       await delay(2000);
       const userJid = jidNormalizedUser(socket.user.id);
       await socket.sendMessage(userJid, {
-        text: `🤖 *ʜᴇɪɴᴢ-ᴍᴅ ʙᴏᴛ v${config.BOT_VERSION}*\n\n` +
-              `*✅ ᴊᴜᴍᴇʟᴀɢᴇ ʀᴇ́ᴜssɪ!*\n` +
-              `*📱 ɴᴜᴍᴇ́ʀᴏ: ${number}*\n` +
+        text: `🤖 *Heinz-md Bot v${config.BOT_VERSION}*\n\n` +
+              `✅ Jumelage réussi!\n` +
+              `📱 Numéro: ${number}\n` +
               `🕐 ${new Date().toLocaleString()}\n\n` +
-              `*💡 ᴛᴀᴘᴇᴢ *.menu* ᴘᴏᴜʀ ᴠᴏɪʀ ʟᴇs ᴄᴏᴍᴍᴀɴᴅᴇs*\n\n` +
-              `> *ᴅᴇ́ᴠᴇʟᴏᴘᴘᴇ́ ᴘᴀʀ ʜᴇɪɴᴢ ʙᴏʏ*`
+              `💡 Tapez *.menu* pour voir les commandes\n\n` +
+              `> Développé par Heinz boy`
       });
     } catch (error) {
-      console.warn(`*⚠️ ᴇʀʀᴇᴜʀ ᴍᴇssᴀɢᴇ ʙɪᴇɴᴠᴇɴᴜᴇ:*`, error.message);
+      console.warn(`⚠️ Erreur message bienvenue:`, error.message);
     }
 
   } else if (connection === 'close') {
-    console.log(`*🔌 ᴄᴏɴɴᴇxɪᴏɴ ғᴇʀᴍᴇ́ᴇ ᴘᴏᴜʀ ${number}*`);
+    console.log(`🔌 Connexion fermée pour ${number}`);
     
     const shouldReconnect = lastDisconnect?.error instanceof Boom
       ? lastDisconnect.error.output?.statusCode !== DisconnectReason.loggedOut
@@ -223,12 +223,12 @@ async function handleConnectionUpdate(number, update) {
     if (shouldReconnect && sessionData.status !== 'connected') {
       await handleReconnection(number);
     } else {
-      console.log(`*✅ sᴇssɪᴏɴ ${number} ᴛᴇʀᴍɪɴᴇ́ᴇ*`);
+      console.log(`✅ Session ${number} terminée`);
       await cleanupSession(number);
     }
 
   } else if (connection === 'connecting') {
-    console.log(`*🔄 ᴄᴏɴɴᴇxɪᴏɴ ᴇɴ ᴄᴏᴜʀs ᴘᴏᴜʀ ${number}...*`);
+    console.log(`🔄 Connexion en cours pour ${number}...`);
     sessionData.status = 'connecting';
   }
 }
@@ -240,7 +240,7 @@ async function handleReconnection(number) {
   const attempts = reconnectAttempts.get(number) || 0;
   
   if (attempts >= MAX_RECONNECT_ATTEMPTS) {
-    console.error(`*❌ ᴇ́ᴄʜᴇᴄ ᴀᴘʀᴇ̀s ${MAX_RECONNECT_ATTEMPTS} ᴛᴇɴᴛᴀᴛɪᴠᴇs ᴘᴏᴜʀ ${number}*`);
+    console.error(`❌ Échec après ${MAX_RECONNECT_ATTEMPTS} tentatives pour ${number}`);
     await cleanupSession(number);
     return;
   }
@@ -248,7 +248,7 @@ async function handleReconnection(number) {
   reconnectAttempts.set(number, attempts + 1);
   
   const delayMs = Math.min(5000 * (attempts + 1), 30000);
-  console.log(`*🔄 ʀᴇᴄᴏɴɴᴇxɪᴏɴ ${attempts + 1}/${MAX_RECONNECT_ATTEMPTS} ᴘᴏᴜʀ ${number} ᴅᴀɴs ${delayMs}ᴍs*`);
+  console.log(`🔄 Reconnexion ${attempts + 1}/${MAX_RECONNECT_ATTEMPTS} pour ${number} dans ${delayMs}ms`);
 
   setTimeout(async () => {
     try {
@@ -257,7 +257,7 @@ async function handleReconnection(number) {
         await recreateSocket(number);
       }
     } catch (error) {
-      console.error(`*❌ ᴇʀʀᴇᴜʀ ʀᴇᴄᴏɴɴᴇxɪᴏɴ ${number}:*`, error);
+      console.error(`❌ Erreur reconnexion ${number}:`, error);
       await handleReconnection(number);
     }
   }, delayMs);
@@ -305,15 +305,15 @@ async function recreateSocket(number) {
     sessionData.socket = socket;
     sessionData.state = state;
     sessionData.saveCreds = saveCreds;
-    sessionData.status = 'ʀᴇᴄᴏɴɴᴇᴄᴛɪɴɢ';
+    sessionData.status = 'reconnecting';
 
     // Reconfigurer les événements
     setupSocketEvents(socket, number);
 
-    console.log(`*🔄 sᴏᴄᴋᴇᴛ ʀᴇᴄʀᴇ́ᴇ́ ᴘᴏᴜʀ ${number}*`);
+    console.log(`🔄 Socket recréé pour ${number}`);
 
   } catch (error) {
-    console.error(`*❌ ᴇʀʀᴇᴜʀ ʀᴇᴄʀᴇ́ᴀᴛɪᴏɴ sᴏᴄᴋᴇᴛ ${number}:*`, error);
+    console.error(`❌ Erreur recréation socket ${number}:`, error);
     throw error;
   }
 }
@@ -339,10 +339,10 @@ function startKeepAlive(number) {
         
         // Log périodique
         if (Date.now() % 60000 < KEEP_ALIVE_INTERVAL) {
-          console.log(`*💓 ᴋᴇᴇᴘ-ᴀʟɪᴠᴇ ${number} - sᴛᴀᴛᴜs: ${sessionData.status}*`);
+          console.log(`💓 Keep-alive ${number} - Status: ${sessionData.status}`);
         }
       } else {
-        console.warn(`*⚠️ ᴡᴇʙsᴏᴄᴋᴇᴛ ғᴇʀᴍᴇ́ ᴘᴏᴜʀ ${number}*`);
+        console.warn(`⚠️ WebSocket fermé pour ${number}`);
       }
     } catch (error) {
       // Ignorer les erreurs de keep-alive
@@ -350,7 +350,7 @@ function startKeepAlive(number) {
   }, KEEP_ALIVE_INTERVAL);
 
   keepAliveIntervals.set(number, interval);
-  console.log(`*💓 ᴋᴇᴇᴘ-ᴀʟɪᴠᴇ ᴅᴇ́ᴍᴀʀʀᴇ́ ᴘᴏᴜʀ ${number}*`);
+  console.log(`💓 Keep-alive démarré pour ${number}`);
 }
 
 /**
@@ -361,7 +361,7 @@ function stopKeepAlive(number) {
   if (interval) {
     clearInterval(interval);
     keepAliveIntervals.delete(number);
-    console.log(`*💓 ᴋᴇᴇᴘ-ᴀʟɪᴠᴇ ᴀʀʀᴇ̂ᴛᴇ́ ᴘᴏᴜʀ ${number}*`);
+    console.log(`💓 Keep-alive arrêté pour ${number}`);
   }
 }
 
@@ -371,7 +371,7 @@ function stopKeepAlive(number) {
 function getSessionStatus(number) {
   const sessionData = activeSessions.get(number);
   if (!sessionData) {
-    return { active: false, status: 'ɴᴏᴛ_ғᴏᴜɴᴅ' };
+    return { active: false, status: 'not_found' };
   }
 
   return {
@@ -390,7 +390,7 @@ function getSessionStatus(number) {
  * Nettoyer une session
  */
 async function cleanupSession(number) {
-  console.log(`*🧹 ɴᴇᴛᴛᴏʏᴀɢᴇ sᴇssɪᴏɴ ${number}*`);
+  console.log(`🧹 Nettoyage session ${number}`);
 
   stopKeepAlive(number);
 
@@ -406,7 +406,7 @@ async function cleanupSession(number) {
   activeSessions.delete(number);
   reconnectAttempts.delete(number);
 
-  console.log(`*✅ sᴇssɪᴏɴ ${number} ɴᴇᴛᴛᴏʏᴇ́ᴇ*`);
+  console.log(`✅ Session ${number} nettoyée`);
 }
 
 /**
@@ -417,7 +417,7 @@ async function cleanupAllSessions() {
   for (const number of numbers) {
     await cleanupSession(number);
   }
-  console.log("*🧹 ᴛᴏᴜᴛᴇs ʟᴇs sᴇssɪᴏɴs ɴᴇᴛᴛᴏʏᴇ́ᴇs*");
+  console.log("🧹 Toutes les sessions nettoyées");
 }
 
 /**
@@ -436,13 +436,13 @@ function getSession(number) {
 
 // Nettoyage automatique au démarrage
 process.on('SIGINT', async () => {
-  console.log('*⏹️ ᴀʀʀᴇ̂ᴛ ᴅᴜ ᴘʀᴏᴄᴇssᴜs...*');
+  console.log('⏹️ Arrêt du processus...');
   await cleanupAllSessions();
   process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-  console.log('*⏹️ ᴀʀʀᴇ̂ᴛ ᴅᴜ ᴘʀᴏᴄᴇssᴜs...*');
+  console.log('⏹️ Arrêt du processus...');
   await cleanupAllSessions();
   process.exit(0);
 });
@@ -506,6 +506,6 @@ if (require.main === module) {
   });
 
   app.listen(PORT, () => {
-    console.log(`*🚀 sᴇʀᴠᴇᴜʀ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ sɪᴍᴘʟᴇ ᴅᴇ́ᴍᴀʀʀᴇ́ sᴜʀ ʟᴇ ᴘᴏʀᴛ ${PORT}*`);
+    console.log(`🚀 Serveur de jumelage simple démarré sur le port ${PORT}`);
   });
 }
