@@ -5,14 +5,14 @@ const { createPairingSession, getSessionStatus, cleanupSession } = require('./si
  */
 
 async function testPersistentPairing() {
-  console.log('*🧪 ᴛᴇsᴛ ᴅᴜ sʏsᴛᴇ̀ᴍᴇ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ ᴘᴇʀsɪsᴛᴀɴᴛ ʜᴇɪɴᴢ ᴍᴅ*\n');
+  console.log('🧪 Test du système de jumelage persistant Heinz-md\n');
 
   // Numéro de test (remplacez par un vrai numéro pour tester)
   const testNumber = '529711221986'; // Numéro d'exemple
 
   try {
-    console.log(`*📱 ᴛᴇsᴛ ᴀᴠᴇᴄ ʟᴇ ɴᴜᴍᴇ́ʀᴏ: ${testNumber}*`);
-    console.log('*⏳ ᴄʀᴇ́ᴀᴛɪᴏɴ ᴅᴇ ʟᴀ sᴇssɪᴏɴ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ...*\n');
+    console.log(`📱 Test avec le numéro: ${testNumber}`);
+    console.log('⏳ Création de la session de jumelage...\n');
 
     // Créer une session de jumelage
     const result = await createPairingSession(testNumber, {
@@ -23,20 +23,20 @@ async function testPersistentPairing() {
 
     if (result.success) {
       if (result.connected) {
-        console.log('*✅ ᴀᴘᴘᴀʀᴇɪʟ ᴅᴇ́ᴊᴀ̀ ᴄᴏɴɴᴇᴄᴛᴇ́!*');
+        console.log('✅ Appareil déjà connecté!');
       } else {
-        console.log(`*🔑 ᴄᴏᴅᴇ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ ɢᴇ́ɴᴇ́ʀᴇ́: ${result.code}*`);
-        console.log(`*⏰ ᴇxᴘɪʀᴇ ᴅᴀɴs: ${Math.floor(result.expiresIn / 1000 / 60)} ᴍɪɴᴜᴛᴇs*\n`);
+        console.log(`🔑 Code de jumelage généré: ${result.code}`);
+        console.log(`⏰ Expire dans: ${Math.floor(result.expiresIn / 1000 / 60)} minutes\n`);
 
-        console.log('*📋 ɪɴsᴛʀᴜᴄᴛɪᴏɴs:*');
-        console.log('*ɪ- ᴏᴜᴠʀᴇᴢ ᴡʜᴀᴛsᴀᴘᴘ sᴜʀ ᴠᴏᴛʀᴇ ᴛᴇ́ʟᴇ́ᴘʜᴏɴᴇ*');
-        console.log('*ɪɪ- ᴀʟʟᴇᴢ ᴅᴀɴs ᴘᴀʀᴀᴍᴇ̀ᴛʀᴇs → ᴀᴘᴘᴀʀᴇɪʟs ʟɪᴇ́s*');
-        console.log('*ɪɪɪ- ᴀᴘᴘᴜʏᴇᴢ sᴜʀ ʟɪᴇʀ ᴜɴ ᴀᴘᴘᴀʀᴇɪʟ*');
-        console.log('*ɪᴠ- sᴇ́ʟᴇᴄᴛɪᴏɴɴᴇᴢ ʟɪᴇʀ ᴀᴠᴇᴄ ᴜɴ ɴᴜᴍᴇ́ʀᴏ ᴅᴇ ᴛᴇ́ʟᴇ́ᴘʜᴏɴᴇ*');
-        console.log(`*ᴠ- ᴇɴᴛʀᴇᴢ ʟᴇ ᴄᴏᴅᴇ: ${result.code}*\n`);
+        console.log('📋 Instructions:');
+        console.log('1. Ouvrez WhatsApp sur votre téléphone');
+        console.log('2. Allez dans Paramètres → Appareils liés');
+        console.log('3. Appuyez sur "Lier un appareil"');
+        console.log('4. Sélectionnez "Lier avec un numéro de téléphone"');
+        console.log(`5. Entrez le code: ${result.code}\n`);
 
         // Surveiller le statut pendant 5 minutes
-        console.log('*👀 sᴜʀᴠᴇɪʟʟᴀɴᴄᴇ ᴅᴜ sᴛᴀᴛᴜᴛ (5 ᴍɪɴᴜᴛᴇs)...*\n');
+        console.log('👀 Surveillance du statut (5 minutes)...\n');
         
         let attempts = 0;
         const maxAttempts = 60; // 5 minutes (5 secondes * 60)
@@ -45,47 +45,47 @@ async function testPersistentPairing() {
           attempts++;
           const status = getSessionStatus(testNumber);
           
-          console.log(`[${attempts}/${maxAttempts}] sᴛᴀᴛᴜs: ${status.status} | ʀᴇᴄᴏɴɴᴇᴄᴛ: ${status.reconnectAttempts} | ᴜᴘᴛɪᴍᴇ: ${status.uptime ? Math.floor(status.uptime / 1000) + 's' : 'N/A'}`);
+          console.log(`[${attempts}/${maxAttempts}] Status: ${status.status} | Reconnect: ${status.reconnectAttempts} | Uptime: ${status.uptime ? Math.floor(status.uptime / 1000) + 's' : 'N/A'}`);
           
-          if (status.status === 'ᴄᴏɴɴᴇᴄᴛᴇᴅ') {
-            console.log('\n*🎉 sᴜᴄᴄᴇ̀s! ʙᴏᴛ ᴄᴏɴɴᴇᴄᴛᴇ́ ᴀᴠᴇᴄ sᴜᴄᴄᴇ̀s!*');
-            console.log(`*📊 ɪɴғᴏʀᴍᴀᴛɪᴏɴs ᴅᴜ ʙᴏᴛ:*`, status.info);
+          if (status.status === 'connected') {
+            console.log('\n🎉 SUCCÈS! Bot connecté avec succès!');
+            console.log(`📊 Informations du bot:`, status.info);
             clearInterval(statusInterval);
             
             // Nettoyer après succès
             setTimeout(async () => {
               await cleanupSession(testNumber);
-              console.log('*🧹 sᴇssɪᴏɴ ɴᴇᴛᴛᴏʏᴇ́ᴇ*');
+              console.log('🧹 Session nettoyée');
               process.exit(0);
             }, 5000);
             
           } else if (attempts >= maxAttempts) {
-            console.log('\n*⏰ ᴛɪᴍᴇᴏᴜᴛ ᴀᴛᴛᴇɪɴᴛ (5 ᴍɪɴᴜᴛᴇs)*');
+            console.log('\n⏰ Timeout atteint (5 minutes)');
             clearInterval(statusInterval);
             
             // Nettoyer après timeout
             setTimeout(async () => {
               await cleanupSession(testNumber);
-              console.log('*🧹 sᴇssɪᴏɴ ɴᴇᴛᴛᴏʏᴇ́ᴇ*');
+              console.log('🧹 Session nettoyée');
               process.exit(1);
             }, 1000);
           }
         }, 5000); // Vérifier toutes les 5 secondes
       }
     } else {
-      console.error('*❌ ᴇʀʀᴇᴜʀ:*', result.message);
+      console.error('❌ Erreur:', result.message);
       process.exit(1);
     }
 
   } catch (error) {
-    console.error('*❌ ᴇʀʀᴇᴜʀ ʟᴏʀs ᴅᴜ ᴛᴇsᴛ:*', error.message);
+    console.error('❌ Erreur lors du test:', error.message);
     
     // Nettoyer en cas d'erreur
     try {
       await cleanupSession(testNumber);
-      console.log('*🧹 sᴇssɪᴏɴ ɴᴇᴛᴛᴏʏᴇ́ᴇ ᴀᴘʀᴇ̀s ᴇʀʀᴇᴜʀ*');
+      console.log('🧹 Session nettoyée après erreur');
     } catch (cleanupError) {
-      console.error('*❌ ᴇʀʀᴇᴜʀ ɴᴇᴛᴛᴏʏᴀɢᴇ:*', cleanupError.message);
+      console.error('❌ Erreur nettoyage:', cleanupError.message);
     }
     
     process.exit(1);
@@ -94,13 +94,13 @@ async function testPersistentPairing() {
 
 // Gestion des signaux pour nettoyer proprement
 process.on('SIGINT', async () => {
-  console.log('\n*⏹️ ᴀʀʀᴇ̂ᴛ ᴅᴜ ᴛᴇsᴛ...*');
+  console.log('\n⏹️ Arrêt du test...');
   try {
     const { cleanupAllSessions } = require('./simple-pair');
     await cleanupAllSessions();
-    console.log('*🧹 ᴛᴏᴜᴛᴇs ʟᴇs sᴇssɪᴏɴs ɴᴇᴛᴛᴏʏᴇ́ᴇs*');
+    console.log('🧹 Toutes les sessions nettoyées');
   } catch (error) {
-    console.error('*❌ ᴇʀʀᴇᴜʀ ɴᴇᴛᴛᴏʏᴀɢᴇ:*', error.message);
+    console.error('❌ Erreur nettoyage:', error.message);
   }
   process.exit(0);
 });
@@ -113,16 +113,16 @@ if (require.main === module) {
     // Utiliser le numéro fourni en argument
     const customNumber = args[0].replace(/[^0-9]/g, '');
     if (customNumber.length >= 10) {
-      console.log(`*📱 ᴜᴛɪʟɪsᴀᴛɪᴏɴ ᴅᴜ ɴᴜᴍᴇ́ʀᴏ ᴘᴇʀsᴏɴɴᴀʟɪsᴇ́: ${customNumber}*`);
+      console.log(`📱 Utilisation du numéro personnalisé: ${customNumber}`);
       // Modifier le numéro de test
       const { createPairingSession, getSessionStatus, cleanupSession } = require('./simple-pair');
       
       async function testWithCustomNumber() {
-        console.log('*🧪 ᴛᴇsᴛ ᴅᴜ sʏsᴛᴇ̀ᴍᴇ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ ᴘᴇʀsɪsᴛᴀɴᴛ ʜᴇɪɴᴢ-ᴍᴅ*\n');
+        console.log('🧪 Test du système de jumelage persistant Heinz-md\n');
         
         try {
-          console.log(`*📱 ᴛᴇsᴛ ᴀᴠᴇᴄ ʟᴇ ɴᴜᴍᴇ́ʀᴏ: ${customNumber}*`);
-          console.log('*⏳ ᴄʀᴇ́ᴀᴛɪᴏɴ ᴅᴇ ʟᴀ sᴇssɪᴏɴ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ...*\n');
+          console.log(`📱 Test avec le numéro: ${customNumber}`);
+          console.log('⏳ Création de la session de jumelage...\n');
 
           const result = await createPairingSession(customNumber, {
             AUTO_JOIN_GROUP: true,
@@ -132,19 +132,19 @@ if (require.main === module) {
 
           if (result.success) {
             if (result.connected) {
-              console.log('*✅ ᴀᴘᴘᴀʀᴇɪʟ ᴅᴇ́ᴊᴀ̀ ᴄᴏɴɴᴇᴄᴛᴇ́!*');
+              console.log('✅ Appareil déjà connecté!');
             } else {
-              console.log(`*🔑 ᴄᴏᴅᴇ ᴅᴇ ᴊᴜᴍᴇʟᴀɢᴇ ɢᴇ́ɴᴇ́ʀᴇ́: ${result.code}*`);
-              console.log(`*⏰ ᴇxᴘɪʀᴇ ᴅᴀɴs: ${Math.floor(result.expiresIn / 1000 / 60)} ᴍɪɴᴜᴛᴇs*\n`);
+              console.log(`🔑 Code de jumelage généré: ${result.code}`);
+              console.log(`⏰ Expire dans: ${Math.floor(result.expiresIn / 1000 / 60)} minutes\n`);
 
-              console.log('*📋 ɪɴsᴛʀᴜᴄᴛɪᴏɴs:*');
-              console.log('*ɪ- ᴏᴜᴠʀᴇᴢ ᴡʜᴀᴛsᴀᴘᴘ sᴜʀ ᴠᴏᴛʀᴇ ᴛᴇ́ʟᴇ́ᴘʜᴏɴᴇ*');
-              console.log('*ɪɪ- ᴀʟʟᴇᴢ ᴅᴀɴs ᴘᴀʀᴀᴍᴇ̀ᴛʀᴇs → ᴀᴘᴘᴀʀᴇɪʟs ʟɪᴇ́s*');
-              console.log('*ɪɪɪ- ᴀᴘᴘᴜʏᴇᴢ sᴜʀ ʟɪᴇʀ ᴜɴ ᴀᴘᴘᴀʀᴇɪʟ*');
-              console.log('*ɪᴠ- sᴇ́ʟᴇᴄᴛɪᴏɴɴᴇᴢ "ʟɪᴇʀ ᴀᴠᴇᴄ ᴜɴ ɴᴜᴍᴇ́ʀᴏ ᴅᴇ ᴛᴇ́ʟᴇ́ᴘʜᴏɴᴇ*');
-              console.log(`*ᴠ- ᴇɴᴛʀᴇᴢ ʟᴇ ᴄᴏᴅᴇ: ${result.code}*\n`);
+              console.log('📋 Instructions:');
+              console.log('1. Ouvrez WhatsApp sur votre téléphone');
+              console.log('2. Allez dans Paramètres → Appareils liés');
+              console.log('3. Appuyez sur "Lier un appareil"');
+              console.log('4. Sélectionnez "Lier avec un numéro de téléphone"');
+              console.log(`5. Entrez le code: ${result.code}\n`);
 
-              console.log('*👀 sᴜʀᴠᴇɪʟʟᴀɴᴄᴇ ᴅᴜ sᴛᴀᴛᴜᴛ...*\n');
+              console.log('👀 Surveillance du statut...\n');
               
               let attempts = 0;
               const maxAttempts = 60;
@@ -153,52 +153,52 @@ if (require.main === module) {
                 attempts++;
                 const status = getSessionStatus(customNumber);
                 
-                console.log(`[${attempts}/${maxAttempts}] sᴛᴀᴛᴜs: ${status.status} | ʀᴇᴄᴏɴɴᴇᴄᴛ: ${status.reconnectAttempts}`);
+                console.log(`[${attempts}/${maxAttempts}] Status: ${status.status} | Reconnect: ${status.reconnectAttempts}`);
                 
-                if (status.status === 'ᴄᴏɴɴᴇᴄᴛᴇᴅ') {
-                  console.log('\n*🎉 sᴜᴄᴄᴇ̀s! ʙᴏᴛ ᴄᴏɴɴᴇᴄᴛᴇ́!*');
+                if (status.status === 'connected') {
+                  console.log('\n🎉 SUCCÈS! Bot connecté!');
                   clearInterval(statusInterval);
                   
                   setTimeout(async () => {
                     await cleanupSession(customNumber);
-                    console.log('*🧹 sᴇssɪᴏɴ ɴᴇᴛᴛᴏʏᴇ́ᴇ*');
+                    console.log('🧹 Session nettoyée');
                     process.exit(0);
                   }, 5000);
                   
                 } else if (attempts >= maxAttempts) {
-                  console.log('\n*⏰ ᴛɪᴍᴇᴏᴜᴛ ᴀᴛᴛᴇɪɴᴛ*');
+                  console.log('\n⏰ Timeout atteint');
                   clearInterval(statusInterval);
                   
                   setTimeout(async () => {
                     await cleanupSession(customNumber);
-                    console.log('*🧹 sᴇssɪᴏɴ ɴᴇᴛᴛᴏʏᴇ́ᴇ*');
+                    console.log('🧹 Session nettoyée');
                     process.exit(1);
                   }, 1000);
                 }
               }, 5000);
             }
           } else {
-            console.error('*❌ ᴇʀʀᴇᴜʀ:*', result.message);
+            console.error('❌ Erreur:', result.message);
             process.exit(1);
           }
 
         } catch (error) {
-          console.error('*❌ ᴇʀʀᴇᴜʀ ʟᴏʀs ᴅᴜ ᴛᴇsᴛ:*', error.message);
+          console.error('❌ Erreur lors du test:', error.message);
           process.exit(1);
         }
       }
       
       testWithCustomNumber();
     } else {
-      console.error('*❌ ɴᴜᴍᴇ́ʀᴏ ɪɴᴠᴀʟɪᴅᴇ. ᴜᴛɪʟɪsᴇᴢ ᴜɴ ɴᴜᴍᴇ́ʀᴏ ᴀᴠᴇᴄ ᴀᴜ ᴍᴏɪɴs 10 ᴄʜɪғғʀᴇs.*');
-      console.log('*ᴜsᴀɢᴇ: ɴᴏᴅᴇ ᴛᴇsᴛ-ᴘᴇʀsɪsᴛᴇɴᴛ-ᴘᴀɪʀɪɴɢ.ᴊs [ɴᴜᴍᴇ́ʀᴏ]*');
-      console.log('ᴇxᴇᴍᴘʟᴇ: ɴᴏᴅᴇ ᴛᴇsᴛ-ᴘᴇʀsɪsᴛᴇɴᴛ-ᴘᴀɪʀɪɴɢ.ᴊs 529711221986');
+      console.error('❌ Numéro invalide. Utilisez un numéro avec au moins 10 chiffres.');
+      console.log('Usage: node test-persistent-pairing.js [numéro]');
+      console.log('Exemple: node test-persistent-pairing.js 529711221986');
       process.exit(1);
     }
   } else {
-    console.log('*ℹ️ ᴀᴜᴄᴜɴ ɴᴜᴍᴇ́ʀᴏ ғᴏᴜʀɴɪ, ᴜᴛɪʟɪsᴀᴛɪᴏɴ ᴅᴜ ɴᴜᴍᴇ́ʀᴏ ᴘᴀʀ ᴅᴇ́ғᴀᴜᴛ*');
-    console.log('*ᴜsᴀɢᴇ: ɴᴏᴅᴇ ᴛᴇsᴛ-ᴘᴇʀsɪsᴛᴇɴᴛ-ᴘᴀɪʀɪɴɢ.ᴊs [ɴᴜᴍᴇ́ʀᴏ]*');
-    console.log('ᴇxᴇᴍᴘʟᴇ: ɴᴏᴅᴇ ᴛᴇsᴛ-ᴘᴇʀsɪsᴛᴇɴᴛ-ᴘᴀɪʀɪɴɢ.ᴊs 529711221986*\n');
+    console.log('ℹ️ Aucun numéro fourni, utilisation du numéro par défaut');
+    console.log('Usage: node test-persistent-pairing.js [numéro]');
+    console.log('Exemple: node test-persistent-pairing.js 529711221986\n');
     testPersistentPairing();
   }
 }
