@@ -1,0 +1,81 @@
+{
+  "name": "Heinz-md",
+  "version": "1.0.0",
+  "description": "Heinz-md - Bot WhatsApp Web moderne et complet développé par Heinz boy",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "render": "node index.js",
+    "format": "prettier --write ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/death-moon/Heinz-md-mini-bot.git"
+  },
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "multi-device",
+    "baileys",
+    "nice-md",
+    "whatsapp-bot",
+    "nice-dev"
+  ],
+  "author": "Heinz Boy",
+  "license": "MIT",
+  "dependencies": {
+    "@whiskeysockets/baileys": "npm:wileys",
+    "express": "^4.18.2",
+    "fs-extra": "^11.2.0",
+    "pino": "^9.7.0",
+    "pino-pretty": "^11.0.0",
+
+    "jimp": "^0.22.12",
+    "form-data": "^4.0.0",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "google-tts-api": "^2.0.2",
+    "wa-sticker-formatter": "^4.4.4",
+    "@octokit/rest": "^20.0.2",
+    "cheerio": "^1.0.0-rc.12",
+    "yt-search": "^2.12.1",
+    "ytdl-core": "^4.11.5",
+    "node-fetch": "^3.3.2",
+    "axios": "^1.6.5",
+    "qrcode": "^1.5.3",
+    "qrcode-terminal": "^0.12.0",
+    "moment-timezone": "^0.5.44",
+    "javascript-obfuscator": "^4.1.0",
+    "sharp": "^0.33.2",
+    "file-type": "^18.7.0",
+    "mime-types": "^2.1.35",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2",
+    "dotenv": "^16.3.1",
+    "crypto-js": "^4.2.0",
+    "uuid": "^9.0.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "multer": "^1.4.5-lts.1",
+    "compression": "^1.7.4",
+    "helmet": "^7.1.0",
+    "morgan": "^1.10.0",
+    "rate-limiter-flexible": "^4.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2",
+    "prettier": "^3.1.1",
+    "eslint": "^8.56.0"
+  },
+  "engines": {
+    "node": ">=18.x",
+    "npm": ">=9.x"
+  },
+  "bugs": {
+    "url": "https://github.com/death-moon/Heinz-md-mini-bot/issues"
+  },
+  "homepage": "https://github.com/death-moon/Heinz-md-mini-bot#readme"
+}
